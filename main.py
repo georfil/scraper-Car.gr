@@ -50,7 +50,7 @@ def fetchCars(page:int):
     
     except requests.exceptions.RequestException as req_err:
         # Catch any RequestException (e.g., connection error, timeout)
-        return {"error": f"Request failed: {str(req_err)}"}
+        return {"error": f"Request failed: {str(req_err)}","data":response.json()}
     
     except ValueError as val_err:
         # Catch JSON decoding errors
