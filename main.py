@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from config import base_url, url, headers, querystring
 import requests
-import traceback
+from playwright.sync_api import sync_playwright
 
 app = FastAPI()
 # session = requests.Session()
@@ -11,7 +11,7 @@ app = FastAPI()
 def read_root():
     return {"status": "ok"}
 
-@app.get("/api/car/{page}")
+@app.get("/api/v1/car/{page}")
 def fetchCars(page:int):
     session = requests.Session()
     query = querystring
@@ -60,3 +60,22 @@ def fetchCars(page:int):
     except Exception as ex:
         # Catch any other type of error and return the exception type and message
         return {"error": f"An unexpected error occurred: {str(ex)}", "type": type(ex).__name__}
+
+@app.get("/api/v2/car/{page}")
+def fetchCars(page:int):
+    query = querystring
+    query["pg"] = page
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)  # Run in headless mode
+        context = browser.new_context()
+
+        # Use Playwright's request API
+        response = context.request.get(url, headers=headers, params=query)
+
+        if response.status == 200:
+            data = response.json()  # Convert response to JSON
+            return {"data":data}  # Print formatted JSON
+        else:
+            print(f"Request failed: {response.status} {response.status_text}")
+
+        browser.close()
