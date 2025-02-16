@@ -5,6 +5,8 @@ headers = {
     "accept": "application/json",
     "accept-language": "en-US,en;q=0.9",
     "referer": "https://www.car.gr/classifieds/cars/?category=15001",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1"
 }
 
 querystring = {"category":"15001","pg":1,"per-page":"60"}
