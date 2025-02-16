@@ -4,8 +4,8 @@ import requests
 import traceback
 
 app = FastAPI()
-session = requests.Session()
-session.headers.update(headers)
+# session = requests.Session()
+# session.headers.update(headers)
 
 @app.get("/")
 def read_root():
@@ -16,7 +16,7 @@ def fetchCars(page:int):
     query = querystring
     querystring["pg"] = page
     try:
-        response = session.get(url=url, params=query)
+        response = requests.get(url=url, headers=headers, params=query)
         response.raise_for_status()  # Raise an exception for HTTP errors (status codes 4xx, 5xx)
         data = response.json().get("data", {})
         if "rows" not in data:
